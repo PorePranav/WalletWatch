@@ -4,6 +4,7 @@ const expenseRouter = require('./routers/expenseRoutes');
 const globalErrorHandler = require('./controllers/errorController');
 const morgan = require('morgan');
 const AppError = require('./utils/appError');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -12,9 +13,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.json({ limit: '10kb' }));
+app.use(cookieParser());
 
 app.use('/api/v1/expenses', expenseRouter);
-// app.use('/api/v1/users', userRouter);
+app.use('/api/v1/users', userRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
