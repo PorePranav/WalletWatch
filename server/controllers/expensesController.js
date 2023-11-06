@@ -1,25 +1,87 @@
 const catchAsync = require('./../utils/catchAsync');
 const Expense = require('./../models/expenseModel');
-
-exports.getAllExpenses = catchAsync(async (req, res, next) => {
-  const allExpenses = await Expense.find({});
-  res.status(200).json({
-    status: 'success',
-    results: allExpenses.length,
-    data: {
-      allExpenses,
-    },
-  });
-});
+const AppError = require('../utils/appError');
 
 exports.createExpense = catchAsync(async (req, res, next) => {
-  console.log(req.body);
+  req.body.user = req.user.id;
   const newExpense = await Expense.create(req.body);
 
   res.status(201).json({
     status: 'success',
     data: {
-      newExpense,
+      data: newExpense,
     },
+  });
+});
+
+exports.getAllExpenses = catchAsync(async (req, res, next) => {
+  const userExpenses = await Expense.find({ user: req.user.id });
+  res.status(200).json({
+    status: 'success',
+    results: userExpenses.length,
+    data: {
+      data: userExpenses,
+    },
+  });
+});
+
+exports.getExpense = catchAsync(async (req, res, next) => {
+  //Check if the users id equals to the expense fetched by req.params.id
+  const fetchedExpense = await Expense.findById(req.params.id);
+  if (fetchedExpense.user.toString() !== req.user._id.toString()) {
+    return next(
+      new AppError('You are unauthorized to perform this action', 401)
+    );
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: fetchedExpense,
+    },
+  });
+});
+
+exports.updateExpense = catchAsync(async (req, res, next) => {
+  const fetchedExpense = await Expense.findById(req.params.id);
+  if (!fetchedExpense)
+    return next(new AppError('No document with that id was found', 404));
+  if (fetchedExpense.user.toString() !== req.user._id.toString()) {
+    return next(
+      new AppError('You are unauthorized to perform this action', 401)
+    );
+  }
+
+  const updatedExpense = await Expense.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: updatedExpense,
+    },
+  });
+});
+
+exports.deleteExpense = catchAsync(async (req, res, next) => {
+  const fetchedExpense = await Expense.findById(req.params.id);
+  if (!fetchedExpense)
+    return next(new AppError('No expense with that id was found', 404));
+  if (fetchedExpense.user.toString() !== req.user._id.toString()) {
+    return next(
+      new AppError('You are unauthorized to perform this action', 401)
+    );
+  }
+  const deletedExpense = await Expense.findByIdAndDelete(req.params.id);
+
+  res.status(204).json({
+    status: 'success',
+    data: deletedExpense,
   });
 });

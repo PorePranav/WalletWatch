@@ -24,6 +24,11 @@ const expenseSchema = mongoose.Schema({
     type: Number,
     required: [true, 'An expense must have an amount'],
   },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: [true, 'Expense must belong to an user'],
+  },
   createdAt: {
     type: Date,
     default: Date.now(),
