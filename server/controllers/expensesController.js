@@ -26,8 +26,10 @@ exports.getAllExpenses = catchAsync(async (req, res, next) => {
 });
 
 exports.getExpense = catchAsync(async (req, res, next) => {
-  //Check if the users id equals to the expense fetched by req.params.id
   const fetchedExpense = await Expense.findById(req.params.id);
+  if (!fetchedExpense) {
+    return next(new AppError('Expense with that id does not exist', 404));
+  }
   if (fetchedExpense.user.toString() !== req.user._id.toString()) {
     return next(
       new AppError('You are unauthorized to perform this action', 401)
