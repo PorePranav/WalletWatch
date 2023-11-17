@@ -1,6 +1,7 @@
 const catchAsync = require('./../utils/catchAsync');
 const Expense = require('./../models/expenseModel');
 const AppError = require('../utils/appError');
+const APIFeatures = require('./../utils/apiFeatures');
 
 exports.createExpense = catchAsync(async (req, res, next) => {
   req.body.user = req.user.id;
@@ -15,13 +16,18 @@ exports.createExpense = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllExpenses = catchAsync(async (req, res, next) => {
-  const userExpenses = await Expense.find({ user: req.user.id });
+  let filter = { user: req.user.id };
+  const features = new APIFeatures(Expense.find(filter), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+  const fetchedExpenses = await features.query;
+
   res.status(200).json({
     status: 'success',
-    results: userExpenses.length,
-    data: {
-      data: userExpenses,
-    },
+    results: fetchedExpenses.length,
+    data: fetchedExpenses,
   });
 });
 

@@ -1,6 +1,6 @@
-const AppError = require('./../utils/appError');
-const catchAsync = require('./../utils/catchAsync');
-const APIFeatures = require('./../utils/apiFeatures');
+const AppError = require('../utils/appError');
+const catchAsync = require('../utils/catchAsync');
+const APIFeatures = require('../utils/apiFeatures');
 
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
@@ -8,9 +8,7 @@ exports.createOne = (Model) =>
 
     res.status(201).json({
       status: 'success',
-      data: {
-        data: newDoc,
-      },
+      data: newDoc,
     });
   });
 
@@ -27,9 +25,7 @@ exports.getOne = (Model, popOptions) =>
 
     res.status(200).json({
       status: 'success',
-      data: {
-        data: doc,
-      },
+      data: doc,
     });
   });
 
@@ -47,9 +43,7 @@ exports.getAll = (Model) =>
     res.status(200).json({
       status: 'success',
       results: docs.length,
-      data: {
-        data: docs,
-      },
+      data: docs,
     });
   });
 
@@ -65,9 +59,7 @@ exports.updateOne = (Model) =>
 
     res.status(200).json({
       status: 'success',
-      data: {
-        data: doc,
-      },
+      data: doc,
     });
   });
 

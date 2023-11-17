@@ -1,6 +1,7 @@
 const catchAsync = require('./../utils/catchAsync');
 const Due = require('./../models/dueModel');
 const AppError = require('../utils/appError');
+const APIFeatures = require('./../utils/apiFeatures');
 
 exports.createDue = catchAsync(async (req, res, next) => {
   req.body.user = req.user.id;
@@ -15,13 +16,18 @@ exports.createDue = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllDues = catchAsync(async (req, res, next) => {
-  const userDues = await Due.find({ user: req.user.id });
+  let filter = { user: req.user.id };
+  const features = new APIFeatures(Due.find(filter), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+  const fetchedDues = await features.query;
+
   res.status(200).json({
     status: 'success',
-    results: userDues.length,
-    data: {
-      data: userDues,
-    },
+    results: fetchedDues.length,
+    data: fetchedDues,
   });
 });
 
@@ -37,9 +43,7 @@ exports.getDue = catchAsync(async (req, res, next) => {
   }
   res.status(200).json({
     status: 'success',
-    data: {
-      data: fetchedDue,
-    },
+    data: fetchedDue,
   });
 });
 
@@ -59,9 +63,7 @@ exports.updateDue = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: {
-      data: updatedDue,
-    },
+    data: updatedDue,
   });
 });
 
