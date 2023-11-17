@@ -3,6 +3,20 @@ const Due = require('./../models/dueModel');
 const AppError = require('../utils/appError');
 const APIFeatures = require('./../utils/apiFeatures');
 
+exports.checkDueOwnership = catchAsync(async (req, res, next) => {
+  const fetchedDue = await Due.findById(req.params.id);
+  if (!fetchedDue) {
+    return next(new AppError('Due with that id does not exist', 404));
+  }
+  if (fetchedDue.user.toString() !== req.user._id.toString()) {
+    return next(
+      new AppError('You are unauthorized to perform this action', 401)
+    );
+  }
+  req.fetchedDue = fetchedDue;
+  next();
+});
+
 exports.createDue = catchAsync(async (req, res, next) => {
   req.body.user = req.user.id;
   const newDue = await Due.create(req.body);
@@ -32,30 +46,13 @@ exports.getAllDues = catchAsync(async (req, res, next) => {
 });
 
 exports.getDue = catchAsync(async (req, res, next) => {
-  const fetchedDue = await Due.findById(req.params.id);
-  if (!fetchedDue) {
-    return next(new AppError('The requested due does not exist', 404));
-  }
-  if (fetchedDue.user.toString() !== req.user._id.toString()) {
-    return next(
-      new AppError('You are unauthorized to perform this action', 401)
-    );
-  }
   res.status(200).json({
     status: 'success',
-    data: fetchedDue,
+    data: req.fetchedDue,
   });
 });
 
 exports.updateDue = catchAsync(async (req, res, next) => {
-  const fetchedDue = await Due.findById(req.params.id);
-  if (!fetchedDue) return next(new AppError('No due with that id', 404));
-  if (fetchedDue.user.toString() != req.user._id.toString()) {
-    return next(
-      new AppError('You are unauthorized to perform this action', 401)
-    );
-  }
-
   const updatedDue = await Due.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
@@ -68,14 +65,6 @@ exports.updateDue = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteDue = catchAsync(async (req, res, next) => {
-  const fetchedDue = await Due.findById(req.params.id);
-  if (!fetchedDue)
-    return next(new AppError('No expense with that id was found', 404));
-  if (fetchedDue.user.toString() !== req.user._id.toString()) {
-    return next(
-      new AppError('You are unauthorized to perform this action', 401)
-    );
-  }
   const deletedDue = await Due.findByIdAndDelete(req.params.id);
 
   res.status(204).json({

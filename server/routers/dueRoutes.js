@@ -8,7 +8,7 @@ router.use(authController.protect);
 router.route('/').get(duesController.getAllDues).post(duesController.createDue);
 router
   .route('/:id')
-  .get(duesController.getDue)
-  .patch(duesController.updateDue)
-  .delete(duesController.deleteDue);
+  .get(duesController.checkDueOwnership, duesController.getDue)
+  .patch(duesController.checkDueOwnership, duesController.updateDue)
+  .delete(duesController.checkDueOwnership, duesController.deleteDue);
 module.exports = router;

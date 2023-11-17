@@ -12,8 +12,14 @@ router
 
 router
   .route('/:id')
-  .get(expenseController.getExpense)
-  .patch(expenseController.updateExpense)
-  .delete(expenseController.deleteExpense);
+  .get(expenseController.checkExpenseOwnership, expenseController.getExpense)
+  .patch(
+    expenseController.checkExpenseOwnership,
+    expenseController.updateExpense
+  )
+  .delete(
+    expenseController.checkExpenseOwnership,
+    expenseController.deleteExpense
+  );
 
 module.exports = router;

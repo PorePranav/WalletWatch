@@ -36,18 +36,12 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createUser = catchAsync((req, res, next) => {
-  res.status(500).json({
-    status: 'failed',
-    message: 'This route is not defined! Please use /signup instead',
-  });
-});
-
 exports.getMe = (req, res, next) => {
   req.params.id = req.user.id;
   next();
 };
 
+//Admin Routes
 exports.getAllUsers = handlerFactory.getAll(User);
 exports.getUser = handlerFactory.getOne(User);
 exports.updateUser = handlerFactory.updateOne(User);
