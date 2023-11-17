@@ -2,6 +2,8 @@ const express = require('express');
 const expenseController = require('./../controllers/expensesController');
 const router = express.Router();
 const authController = require('./../controllers/authController');
+const handlerFactory = require('./../controllers/handlerFactory');
+const Expense = require('./../models/expenseModel');
 
 router.use(authController.protect);
 
@@ -12,13 +14,13 @@ router
 
 router
   .route('/:id')
-  .get(expenseController.checkExpenseOwnership, expenseController.getExpense)
+  .get(handlerFactory.checkOwnership(Expense), expenseController.getExpense)
   .patch(
-    expenseController.checkExpenseOwnership,
+    handlerFactory.checkOwnership(Expense),
     expenseController.updateExpense
   )
   .delete(
-    expenseController.checkExpenseOwnership,
+    handlerFactory.checkOwnership(Expense),
     expenseController.deleteExpense
   );
 

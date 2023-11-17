@@ -1,9 +1,27 @@
-const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
-const APIFeatures = require('../utils/apiFeatures');
+const AppError = require('./../utils/appError');
+const APIFeatures = require('./../utils/apiFeatures');
+
+exports.checkOwnership = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const fetchedItem = await Model.findById(req.params.id);
+    if (!fetchedItem) {
+      return next(
+        new AppError(`${Model.modelName} with that id does not exist`, 404)
+      );
+    }
+    if (fetchedItem.user.toString() !== req.user._id.toString()) {
+      return next(
+        new AppError('You are unauthorized to perform this action', 401)
+      );
+    }
+    req.fetchedItem = fetchedItem;
+    next();
+  });
 
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
+    req.body.user = req.user.id;
     const newDoc = await Model.create(req.body);
 
     res.status(201).json({
@@ -12,66 +30,48 @@ exports.createOne = (Model) =>
     });
   });
 
-exports.getOne = (Model, popOptions) =>
-  catchAsync(async (req, res, next) => {
-    let query = Model.findById(req.params.id);
-    if (popOptions) query = query.populate(popOptions);
-    const doc = await query;
-
-    if (!doc)
-      return next(
-        new AppError(`No document was found with id ${req.params.id}`)
-      );
-
-    res.status(200).json({
-      status: 'success',
-      data: doc,
-    });
-  });
-
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
-    let filter = {};
-    if (req.params.tourId) filter = { tour: req.params.tourId };
+    let filter = { user: req.user.id };
     const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .sort()
       .limitFields()
       .paginate();
-    const docs = await features.query;
+    const fetchedDocs = await features.query;
 
     res.status(200).json({
       status: 'success',
-      results: docs.length,
-      data: docs,
+      results: fetchedDocs.length,
+      data: fetchedDocs,
     });
   });
 
-exports.updateOne = (Model) =>
+exports.getOne = (Model) => (req, res, next) => {
+  res.status(200).json({
+    status: 'success',
+    data: req.fetchedItem,
+  });
+};
+
+exports.update = (Model) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
+    const updatedDoc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
 
-    if (!doc)
-      return next(new AppError('No document with that id was found', 404));
-
     res.status(200).json({
       status: 'success',
-      data: doc,
+      data: updatedDoc,
     });
   });
 
-exports.deleteOne = (Model) =>
+exports.delete = (Model) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndDelete(req.params.id);
-
-    if (!doc)
-      return next(new AppError(`No document with that id was found`, 404));
-
+    const deletedDoc = await Model.findByIdAndDelete(req.params.id);
     res.status(204).json({
       status: 'success',
-      data: doc,
+      data: deletedDoc,
     });
   });

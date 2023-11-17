@@ -1,7 +1,7 @@
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
-const handlerFactory = require('./handlerFactory');
+const userHandlerFactory = require('./userHandlerFactory');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObject = {};
@@ -42,7 +42,7 @@ exports.getMe = (req, res, next) => {
 };
 
 //Admin Routes
-exports.getAllUsers = handlerFactory.getAll(User);
-exports.getUser = handlerFactory.getOne(User);
-exports.updateUser = handlerFactory.updateOne(User);
-exports.deleteUser = handlerFactory.deleteOne(User);
+exports.getAllUsers = userHandlerFactory.getAll(User);
+exports.getUser = userHandlerFactory.getOne(User);
+exports.updateUser = userHandlerFactory.updateOne(User);
+exports.deleteUser = userHandlerFactory.deleteOne(User);
