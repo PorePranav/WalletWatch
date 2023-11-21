@@ -47,7 +47,7 @@ exports.getAll = (Model) =>
     });
   });
 
-exports.getOne = (Model) => (req, res, next) => {
+exports.getOne = () => (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: req.fetchedItem,
