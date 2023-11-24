@@ -13,4 +13,5 @@ router
   .get(handlerFactory.checkOwnership(Due), duesController.getDue)
   .patch(handlerFactory.checkOwnership(Due), duesController.updateDue)
   .delete(handlerFactory.checkOwnership(Due), duesController.deleteDue);
+
 module.exports = router;
