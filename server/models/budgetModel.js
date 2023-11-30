@@ -6,6 +6,9 @@ const budgetSchema = mongoose.Schema({
     ref: 'User',
     required: [true, 'Budget record must belong to an user'],
   },
+  budgetTotal: {
+    type: Number,
+  },
   budgetBreakup: {
     required: [true, 'Breakup of a budget should be defined'],
     type: Map,
@@ -22,7 +25,7 @@ const budgetSchema = mongoose.Schema({
 });
 
 budgetSchema.pre('save', async function (next) {
-  for (let [value] of this.budgetBreakup) this.budgetBreakup += value;
+  for (const [key, value] of this.budgetBreakup) this.budgetTotal += value;
   next();
 });
 
