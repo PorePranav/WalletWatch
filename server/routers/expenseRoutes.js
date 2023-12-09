@@ -12,6 +12,8 @@ router
   .get(expenseController.getAllExpenses)
   .post(expenseController.createExpense);
 
+router.get('/expenseStats', expenseController.getExpenseStats);
+
 router
   .route('/:id')
   .get(handlerFactory.checkOwnership(Expense), expenseController.getExpense)
