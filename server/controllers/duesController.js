@@ -9,18 +9,11 @@ exports.updateDue = handlerFactory.update(Due);
 exports.deleteDue = handlerFactory.delete(Due);
 
 exports.getDueStats = catchAsync(async (req, res, next) => {
-  const today = new Date();
-  const startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-  const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-
   const stats = await Due.aggregate([
     {
       $match: {
         user: req.user._id,
-        createdAt: {
-          $gte: startDate,
-          $lte: endDate,
-        },
+        paid: false,
       },
     },
     {

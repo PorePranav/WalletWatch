@@ -26,8 +26,8 @@ exports.getExpenseStats = catchAsync(async (req, res, next) => {
     {
       $group: {
         _id: null,
-        numExpenses: { $sum: 1 },
         totalExpenses: { $sum: '$amount' },
+        numExpenses: { $sum: 1 },
       },
     },
     {

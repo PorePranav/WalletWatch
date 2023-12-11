@@ -17,10 +17,13 @@ const dueSchema = mongoose.Schema({
   dueOn: {
     type: Date,
   },
+  paid: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now(),
-    select: false,
   },
 });
 
