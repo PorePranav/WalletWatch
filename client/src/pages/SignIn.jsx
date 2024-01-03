@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signIn } from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
@@ -55,6 +56,7 @@ export default function SignIn() {
         >
           Sign In
         </button>
+        <OAuth />
       </form>
       <div className="flex gap-2 mt-5">
         <p>Dont have an account?</p>

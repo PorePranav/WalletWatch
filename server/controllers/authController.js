@@ -187,3 +187,26 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   createSendToken(user, 200, res);
 });
+
+exports.oAuth = catchAsync(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (user) {
+    createSendToken(user, 200, res);
+  } else {
+    const generatedPassword =
+      Math.random().toString(36).slice(-8) +
+      Math.random().toString(36).slice(-8);
+
+    const newUser = await User.create({
+      name:
+        req.body.name.split(" ").join("").toLowerCase() +
+        Math.random().toString(36).slice(-4),
+      email: req.body.email,
+      password: generatedPassword,
+      passwordConfirm: generatedPassword,
+      avatar: req.body.photo,
+    });
+
+    createSendToken(newUser, 201, res);
+  }
+});
