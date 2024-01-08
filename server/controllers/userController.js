@@ -1,7 +1,7 @@
-const User = require('./../models/userModel');
-const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./../utils/appError');
-const userHandlerFactory = require('./userHandlerFactory');
+const User = require("./../models/userModel");
+const catchAsync = require("./../utils/catchAsync");
+const AppError = require("./../utils/appError");
+const userHandlerFactory = require("./userHandlerFactory");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObject = {};
@@ -15,23 +15,23 @@ const filterObj = (obj, ...allowedFields) => {
 exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm)
     next(new AppError(`Can't update password using this route`, 400));
-  const filteredBody = filterObj(req.body, 'name', 'email');
+  const filteredBody = filterObj(req.body, "name", "email", "avatar");
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true,
   });
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     updatedUser,
   });
 });
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.user.id, { active: false });
+  await User.findByIdAndDelete(req.user.id, { active: false });
 
   res.status(204).json({
-    status: 'success',
+    status: "success",
     data: null,
   });
 });

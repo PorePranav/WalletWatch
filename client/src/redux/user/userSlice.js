@@ -11,8 +11,14 @@ const userSlice = createSlice({
     signIn: (state, action) => {
       state.currentUser = action.payload;
     },
+    updateUser: (state, action) => {
+      state.currentUser = action.payload;
+    },
+    logOut: (state) => {
+      state.currentUser = null;
+    },
   },
 });
 
-export const { signIn } = userSlice.actions;
+export const { signIn, updateUser, logOut } = userSlice.actions;
 export default userSlice.reducer;

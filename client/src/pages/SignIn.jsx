@@ -20,7 +20,9 @@ export default function SignIn() {
     e.preventDefault();
     setIsLoading(true);
     axios
-      .post("http://localhost:3000/api/v1/users/login", formData)
+      .post("http://localhost:3000/api/v1/users/login", formData, {
+        withCredentials: true,
+      })
       .then((data) => {
         dispatch(signIn(data.data.user));
         setIsLoading(false);

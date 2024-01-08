@@ -29,27 +29,18 @@ const createSendToken = (user, statusCode, res) => {
     expiresIn: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN + 86400000
     ),
-    httpOnly: true,
+    // httpOnly: true,
   };
-  if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
-  res.cookie("access_token", token, cookieOptions);
-
+  // if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
   const { password, ...rest } = user._doc;
-  res.status(statusCode).json({
+  res.cookie("jwt", token, cookieOptions).status(statusCode).json({
     status: "success",
     user: rest,
   });
 };
 
 exports.protect = catchAsync(async (req, res, next) => {
-  let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  )
-    token = req.headers.authorization.split(" ")[1];
-  else if (req.cookies.jwt) token = req.cookies.jwt;
-
+  const token = req.cookies.jwt;
   if (!token || token === "null")
     return next(new AppError("User is not logged in", 401));
 
@@ -66,6 +57,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 });
 
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  console.log(req.cookies);
   if (req.cookies.jwt) {
     const decoded = await promisify(jwt.verify)(
       req.cookies.jwt,
@@ -210,3 +202,10 @@ exports.oAuth = catchAsync(async (req, res, next) => {
     createSendToken(newUser, 201, res);
   }
 });
+
+exports.logout = (req, res, next) => {
+  res.clearCookie("jwt").status(200).json({
+    status: "success",
+    data: null,
+  });
+};

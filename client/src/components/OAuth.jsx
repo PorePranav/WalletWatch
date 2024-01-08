@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { app } from "../firebase";
 import { signIn } from "../redux/user/userSlice";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function OAuth() {
   const navigate = useNavigate();
@@ -21,13 +22,16 @@ export default function OAuth() {
     };
 
     axios
-      .post("http://localhost:3000/api/v1/users/oauth", user)
+      .post("http://localhost:3000/api/v1/users/oauth", user, {
+        withCredentials: true,
+      })
       .then((data) => {
         dispatch(signIn(data.data.user));
         navigate("/");
       })
       .catch((err) => {
-        toast.error("There was a problem with OAuth");
+        console.log(err);
+        toast.error(err.response.data.message);
       });
   };
 
