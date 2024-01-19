@@ -29,9 +29,9 @@ const createSendToken = (user, statusCode, res) => {
     expiresIn: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN + 86400000
     ),
-    // httpOnly: true,
+    httpOnly: true,
   };
-  // if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+  if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
   const { password, ...rest } = user._doc;
   res.cookie("jwt", token, cookieOptions).status(statusCode).json({
     status: "success",
@@ -167,16 +167,16 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("password");
 
-  if (!(await user.correctPassword(req.body.passwordCurrent, user.password)))
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
     return next(
       new AppError("You have entered the wrong current password", 401)
     );
+  }
 
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
 
   await user.save();
-
   createSendToken(user, 200, res);
 });
 

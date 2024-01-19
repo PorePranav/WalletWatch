@@ -140,6 +140,12 @@ export default function Profile() {
         >
           Update
         </button>
+        <button
+          onClick={() => navigate("/change-password")}
+          className="bg-green-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+        >
+          Update Password
+        </button>
       </form>
       <div className="flex mt-5 justify-between">
         <span onClick={handleDelete} className="text-red-700 cursor-pointer">

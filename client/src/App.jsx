@@ -6,6 +6,7 @@ import Profile from "./pages/Profile";
 import Header from "./components/Header";
 import PrivateRoute from "./components/PrivateRoute";
 import { Toaster } from "react-hot-toast";
+import ChangePassword from "./pages/ChangePassword";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/sign-up" element={<SignUp />} />
           <Route element={<PrivateRoute />}>
             <Route path="/profile" element={<Profile />} />
+            <Route path="/change-password" element={<ChangePassword />}></Route>
           </Route>
         </Routes>
       </BrowserRouter>
