@@ -60,10 +60,12 @@ export default function SignIn() {
         </button>
         <OAuth />
       </form>
-      <div className="flex gap-2 mt-5">
-        <p>Dont have an account?</p>
+      <div className="flex gap-2 mt-5 justify-between">
         <Link to="/sign-up">
-          <span className="text-blue-700">Sign Up</span>
+          <span className="text-blue-700">Dont have an account?</span>
+        </Link>
+        <Link to="/forgot-password">
+          <span className="text-blue-700">Forgot password?</span>
         </Link>
       </div>
     </div>

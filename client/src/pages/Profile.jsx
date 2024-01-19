@@ -16,9 +16,9 @@ import { updateUser, logOut } from "../redux/user/userSlice";
 export default function Profile() {
   const fileRef = useRef(null);
   const navigate = useNavigate();
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, isOauth } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
-  const [setFilePerc] = useState(0);
+  const [filePerc, setFilePerc] = useState(0);
   const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -128,6 +128,7 @@ export default function Profile() {
         />
         <input
           type="email"
+          disabled={isOauth}
           id="email"
           onChange={handleChange}
           defaultValue={currentUser.email}
@@ -140,12 +141,14 @@ export default function Profile() {
         >
           Update
         </button>
-        <button
-          onClick={() => navigate("/change-password")}
-          className="bg-green-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
-        >
-          Update Password
-        </button>
+        {!isOauth && (
+          <button
+            onClick={() => navigate("/change-password")}
+            className="bg-green-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+          >
+            Update Password
+          </button>
+        )}
       </form>
       <div className="flex mt-5 justify-between">
         <span onClick={handleDelete} className="text-red-700 cursor-pointer">

@@ -2,7 +2,7 @@ import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { app } from "../firebase";
-import { signIn } from "../redux/user/userSlice";
+import { signInOauth } from "../redux/user/userSlice";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -26,7 +26,7 @@ export default function OAuth() {
         withCredentials: true,
       })
       .then((data) => {
-        dispatch(signIn(data.data.user));
+        dispatch(signInOauth(data.data.user));
         navigate("/");
       })
       .catch((err) => {
