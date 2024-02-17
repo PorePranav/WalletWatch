@@ -30,9 +30,12 @@ const createSendToken = (user, statusCode, res) => {
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN + 86400000
     ),
     httpOnly: true,
+    SameSite: "none",
   };
+
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
   const { password, ...rest } = user._doc;
+
   res.cookie("jwt", token, cookieOptions).status(statusCode).json({
     status: "success",
     user: rest,
@@ -57,7 +60,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 });
 
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
-  console.log(req.cookies);
   if (req.cookies.jwt) {
     const decoded = await promisify(jwt.verify)(
       req.cookies.jwt,

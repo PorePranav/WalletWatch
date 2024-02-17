@@ -29,6 +29,7 @@ export default function ResetPassword() {
         setIsLoading(false);
       });
   };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
