@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import { FaSearch } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { Link } from 'react-router-dom';
+import { FaSearch } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
@@ -22,17 +22,17 @@ export default function Header() {
           <FaSearch className="text-slate-600" />
         </form>
         <ul className="flex gap-4 items-center">
-          <Link to="/">
+          <Link to="/expenses">
             <li className="hidden sm:inline text-slate-700 hover:underline">
               Expenses
             </li>
           </Link>
-          <Link to="/">
+          <Link to="/dues">
             <li className="hidden sm:inline text-slate-700 hover:underline">
               Dues
             </li>
           </Link>
-          <Link to="/">
+          <Link to="/income">
             <li className="hidden sm:inline text-slate-700 hover:underline">
               Income
             </li>
