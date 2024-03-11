@@ -1,28 +1,49 @@
 import { useState } from 'react';
+import { formatCurrency } from '../utils/helpers';
 import { HiDotsVertical } from 'react-icons/hi';
 import ExpenseModal from './ExpenseModal';
+import { format } from 'date-fns';
 
-export default function ExpenseCard({ expense }) {
+export default function ExpenseCard({ expense, onUpdate }) {
   const date = new Date(expense.createdAt).toLocaleDateString();
   const [showModal, setShowModal] = useState(false);
 
+  const categoryToTagName = {
+    housing: 'red',
+    transportation: 'green',
+    'food-groceries': 'blue',
+    healthcare: 'yellow',
+    'debt-payments': 'orange',
+    personal: 'amber',
+    savings: 'lime',
+    educational: 'slate',
+    miscellaneous: 'cyan',
+  };
+
   return (
     <>
-      <div className="grid grid-cols-5 gap-4 w-full rounded-lg p-4 text-center">
-        <p>{expense.amount}</p>
+      <div className="gap-4 p-4 text-center border-b border-slate-300 w-full grid grid-cols-5">
+        <p className="font-semibold font-sono">
+          {formatCurrency(expense.amount)}
+        </p>
         <p>{expense.note}</p>
-        <p>{date}</p>
-        <p>{expense.category}</p>
+        <p>{format(new Date(date), 'dd MMM yyyy')}</p>
+        <span className="uppercase rounded-full text-sm px-0.75 py-0.5 font-semibold text-slate700 bg-slate-300">
+          {expense.category}
+        </span>
         <button
-          className="flex items-center justify-center"
+          className="hover:cursor-pointer align-self-right justify-self-center"
           onClick={() => setShowModal(true)}
         >
           <HiDotsVertical />
         </button>
       </div>
-      <hr />
       {showModal && (
-        <ExpenseModal expense={expense} onClose={() => setShowModal(false)} />
+        <ExpenseModal
+          expense={expense}
+          onClose={() => setShowModal(false)}
+          onUpdate={onUpdate}
+        />
       )}
     </>
   );

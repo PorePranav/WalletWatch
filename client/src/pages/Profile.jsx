@@ -1,17 +1,17 @@
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { useRef, useState, useEffect } from "react";
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useRef, useState, useEffect } from 'react';
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
-} from "firebase/storage";
-import { app } from "../firebase";
-import { useDispatch } from "react-redux";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { updateUser, logOut } from "../redux/user/userSlice";
+} from 'firebase/storage';
+import { app } from '../firebase';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { updateUser, logOut } from '../redux/user/userSlice';
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -30,19 +30,26 @@ export default function Profile() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
-    axios
-      .patch("http://localhost:3000/api/v1/users/updateMe", formData, {
+    const updateProfileFunction = axios
+      .patch('http://localhost:3000/api/v1/users/updateMe', formData, {
         withCredentials: true,
       })
       .then((data) => {
+        setFormData({});
         dispatch(updateUser(data.data.updatedUser));
-        setIsLoading(false);
-        toast.success("User updated successfully");
       })
       .catch((err) => {
+        console.error(err.message);
+      })
+      .finally(() => {
         setIsLoading(false);
-        toast.error(err.response.data.message);
       });
+
+    toast.promise(updateProfileFunction, {
+      loading: 'Updating your profile',
+      success: 'Updated your profile',
+      error: 'There was an error updating your profile',
+    });
   };
 
   useEffect(() => {
@@ -55,49 +62,62 @@ export default function Profile() {
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setFilePerc(Math.round(progress));
-      },
-      () => {
-        toast.error("Image size should be less than 2 MB");
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          toast.success("Photo uploaded successfully");
-          setFormData({ ...formData, avatar: downloadURL });
-        });
+    toast.promise(
+      new Promise((resolve, reject) => {
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setFilePerc(Math.round(progress));
+          },
+          (error) => {
+            reject('Image size should be less than 2 MB');
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref)
+              .then((downloadURL) => {
+                setFormData({ ...formData, avatar: downloadURL });
+                resolve('Photo uploaded successfully');
+              })
+              .catch((error) => {
+                reject(error.message);
+              });
+          }
+        );
+      }),
+      {
+        loading: 'Uploading photo',
+        success: 'Uploaded photo successfully',
+        error: 'Select an image with size < 2MB',
       }
     );
   };
 
   const handleSignOut = () => {
     axios
-      .get("http://localhost:3000/api/v1/users/logout", {
+      .get('http://localhost:3000/api/v1/users/logout', {
         withCredentials: true,
       })
       .then((data) => {
         dispatch(logOut());
-        toast.success("You have been logged out!");
+        toast.success('You have been logged out!');
       })
       .catch((err) => toast.err(err.response.data.message));
   };
 
   const handleDelete = () => {
     axios
-      .delete("http://localhost:3000/api/v1/users/deleteMe", {
+      .delete('http://localhost:3000/api/v1/users/deleteMe', {
         withCredentials: true,
       })
       .then((data) => {
-        toast.success("Your account was deleted successfully!");
+        toast.success('Your account was deleted successfully!');
         dispatch(logOut());
-        navigate("/");
+        navigate('/');
       })
       .catch((err) => {
-        toast.error("There was an error deleting your account");
+        toast.error('There was an error deleting your account');
       });
   };
 
@@ -143,7 +163,7 @@ export default function Profile() {
         </button>
         {!isOauth && (
           <button
-            onClick={() => navigate("/change-password")}
+            onClick={() => navigate('/change-password')}
             className="bg-green-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
           >
             Update Password

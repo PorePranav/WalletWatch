@@ -1,25 +1,81 @@
 import { AiOutlineClose } from 'react-icons/ai';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useState } from 'react';
 
-export default function ImmunizationModal({ expense, onClose, onUpdate }) {
+export default function ExpenseModal({ expense, onClose, onUpdate }) {
   const formattedDate = new Date(expense.createdAt).toLocaleDateString();
+  const [formData, setFormData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleClick = () => {
-    axios
-      .patch(
-        `http://localhost:3000/api/v1/immunizations/${immunization._id}`,
-        data,
-        { withCredentials: true }
-      )
-      .then((data) => {
+  const handleChange = (e) => {
+    setFormData((prevData) => ({ ...prevData, [e.target.id]: e.target.value }));
+  };
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const deleteExpenseFunction = axios
+      .delete(`http://localhost:3000/api/v1/expenses/${expense._id}`, {
+        withCredentials: true,
+      })
+      .then(() => {
         onClose();
         onUpdate();
-        toast.success('Immunization record updated successfully');
       })
       .catch((err) => {
-        toast.error(err.response.data.message);
+        console.error(err.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
+
+    toast.promise(deleteExpenseFunction, {
+      loading: 'Deleting the expense',
+      success: 'Deleted the expense',
+      error: 'There was an error deleting the expense',
+    });
+  };
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+
+    const updateExpenseFunction = axios
+      .patch(`http://localhost:3000/api/v1/expenses/${expense._id}`, formData, {
+        withCredentials: true,
+      })
+      .then(() => {
+        onClose();
+        onUpdate();
+      })
+      .catch((err) => {
+        console.error(err.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+
+    toast.promise(updateExpenseFunction, {
+      loading: 'Updating the expense',
+      success: 'Updated the expense',
+      error: 'There was an error updating the expense',
+    });
+    // try {
+    //   await axios.patch(
+    //     `http://localhost:3000/api/v1/expenses/${expense._id}`,
+    //     formData,
+    //     {
+    //       withCredentials: true,
+    //     }
+    //   );
+
+    //   onClose();
+    //   onUpdate();
+    //   toast.success('Expense record updated successfully');
+    // } catch (err) {
+    //   toast.error(err.response?.data?.message || 'An error occurred');
+    // }
   };
 
   return (
@@ -43,6 +99,8 @@ export default function ImmunizationModal({ expense, onClose, onUpdate }) {
             <label>Amount</label>
             <input
               type="text"
+              onChange={handleChange}
+              id="amount"
               placeholder="Amount"
               defaultValue={expense.amount}
               className="border border-slate-400 p-2 rounded-md"
@@ -53,6 +111,8 @@ export default function ImmunizationModal({ expense, onClose, onUpdate }) {
             <input
               type="text"
               placeholder="Note"
+              onChange={handleChange}
+              id="note"
               defaultValue={expense.note}
               className="border border-slate-400 p-2 rounded-md"
             />
@@ -62,6 +122,8 @@ export default function ImmunizationModal({ expense, onClose, onUpdate }) {
             <input
               type="date"
               defaultValue={formattedDate}
+              onChange={handleChange}
+              id="date"
               className="border border-slate-400 p-2 rounded-md"
             />
           </div>
@@ -69,6 +131,8 @@ export default function ImmunizationModal({ expense, onClose, onUpdate }) {
             <label>Category</label>
             <select
               defaultValue={expense.category}
+              id="category"
+              onChange={handleChange}
               className="border border-slate-400 p-2 rounded-md"
             >
               <option value="housing">Housing</option>
@@ -76,14 +140,24 @@ export default function ImmunizationModal({ expense, onClose, onUpdate }) {
               <option value="food-groceries">Food Groceries</option>
               <option value="healthcare">Healthcare</option>
               <option value="debt-payments">Debt Payments</option>
-              <option value="personal-lifestyle">Personal Lifestyle</option>
-              <option value="savings-investment">Savings Investment</option>
+              <option value="personal">Personal Lifestyle</option>
+              <option value="savings">Savings Investment</option>
               <option value="educational">Educational</option>
               <option value="miscellaneous">Miscellaneous</option>
             </select>
           </div>
-          <button className="bg-slate-700 rounded-md mt-2 font-semibold text-white px-4 py-2">
+          <button
+            onClick={(e) => handleClick(e)}
+            className="bg-slate-700 rounded-md mt-2 font-semibold text-white px-4 py-2"
+          >
             Edit Expense
+          </button>
+          <button
+            onClick={(e) => handleDelete(e)}
+            className="bg-red-700 rounded-md font-semibold text-white px-4 py-2"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Deleting...' : 'Delete Expense'}
           </button>
         </form>
       </div>
