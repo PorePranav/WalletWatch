@@ -4,6 +4,7 @@ const expenseSchema = mongoose.Schema({
   note: {
     type: String,
     maxLength: [100, 'Description can be of maximum 100 characters'],
+    default: '',
   },
   category: {
     type: String,

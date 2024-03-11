@@ -8,18 +8,6 @@ export default function ExpenseCard({ expense, onUpdate }) {
   const date = new Date(expense.createdAt).toLocaleDateString();
   const [showModal, setShowModal] = useState(false);
 
-  const categoryToTagName = {
-    housing: 'red',
-    transportation: 'green',
-    'food-groceries': 'blue',
-    healthcare: 'yellow',
-    'debt-payments': 'orange',
-    personal: 'amber',
-    savings: 'lime',
-    educational: 'slate',
-    miscellaneous: 'cyan',
-  };
-
   return (
     <>
       <div className="gap-4 p-4 text-center border-b border-slate-300 w-full grid grid-cols-5">

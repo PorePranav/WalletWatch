@@ -1,9 +1,9 @@
-import axios from "axios";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import toast from "react-hot-toast";
-import { logOut } from "../redux/user/userSlice";
-import { useDispatch } from "react-redux";
+import axios from 'axios';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
+import { logOut } from '../redux/user/userSlice';
+import { useDispatch } from 'react-redux';
 
 export default function ChangePassword() {
   const { currentUser } = useSelector((state) => state.user);
@@ -14,19 +14,25 @@ export default function ChangePassword() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
-    axios
-      .patch("http://localhost:3000/api/v1/users/updatePassword", formData, {
+    const updatePasswordFunction = axios
+      .patch('http://localhost:3000/api/v1/users/updatePassword', formData, {
         withCredentials: true,
       })
       .then((data) => {
-        toast.success("Password updated");
         dispatch(logOut());
-        setIsLoading(false);
       })
       .catch((err) => {
-        console.log(err.response.data.message);
+        console.error(err.message);
+      })
+      .finally(() => {
         setIsLoading(false);
       });
+
+    toast.promise(updatePasswordFunction, {
+      loading: 'Updating your password',
+      success: 'Updated password successfully',
+      error: 'There was an error updating the password',
+    });
   };
 
   const handleChange = (e) => {
@@ -50,6 +56,7 @@ export default function ChangePassword() {
           onChange={handleChange}
           placeholder="Current Password"
           className="border p-3 rounded-lg"
+          required
         />
         <input
           type="password"
@@ -57,6 +64,7 @@ export default function ChangePassword() {
           onChange={handleChange}
           placeholder="Password"
           className="border p-3 rounded-lg"
+          required
         />
         <input
           type="password"
@@ -64,6 +72,7 @@ export default function ChangePassword() {
           onChange={handleChange}
           placeholder="Confirm Password"
           className="border p-3 rounded-lg"
+          required
         />
         <button
           disabled={isLoading}

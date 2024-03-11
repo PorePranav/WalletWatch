@@ -61,21 +61,6 @@ export default function ExpenseModal({ expense, onClose, onUpdate }) {
       success: 'Updated the expense',
       error: 'There was an error updating the expense',
     });
-    // try {
-    //   await axios.patch(
-    //     `http://localhost:3000/api/v1/expenses/${expense._id}`,
-    //     formData,
-    //     {
-    //       withCredentials: true,
-    //     }
-    //   );
-
-    //   onClose();
-    //   onUpdate();
-    //   toast.success('Expense record updated successfully');
-    // } catch (err) {
-    //   toast.error(err.response?.data?.message || 'An error occurred');
-    // }
   };
 
   return (
@@ -123,7 +108,7 @@ export default function ExpenseModal({ expense, onClose, onUpdate }) {
               type="date"
               defaultValue={formattedDate}
               onChange={handleChange}
-              id="date"
+              id="createdAt"
               className="border border-slate-400 p-2 rounded-md"
             />
           </div>

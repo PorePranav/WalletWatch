@@ -13,6 +13,37 @@ exports.getExpenseStats = catchAsync(async (req, res, next) => {
   const startDate = new Date(today.getFullYear(), today.getMonth(), 1);
   const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
+  const statsByCategory = await Expense.aggregate([
+    {
+      $match: {
+        user: req.user._id,
+        createdAt: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      },
+    },
+    {
+      $group: {
+        _id: '$category',
+        totalExpenses: { $sum: '$amount' },
+      },
+    },
+    {
+      $sort: { totalExpenses: -1 },
+    },
+    {
+      $limit: 1,
+    },
+    {
+      $project: {
+        _id: 0,
+        mostExpendedCategory: '$_id',
+        totalExpenses: 1,
+      },
+    },
+  ]);
+
   const stats = await Expense.aggregate([
     {
       $match: {
@@ -41,6 +72,6 @@ exports.getExpenseStats = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: stats,
+    data: { statsByCategory, stats },
   });
 });
