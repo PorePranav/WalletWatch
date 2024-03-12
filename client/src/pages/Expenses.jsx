@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import Spinner from '../ui/Spinner';
 import ExpenseCard from '../ui/ExpenseCard';
@@ -13,11 +14,8 @@ export default function Expenses() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterQuery, setFilterQuery] = useState('all');
 
-  // console.log(`searchQuery: ${searchQuery}`);
-  // console.log(`filterQuery: ${filterQuery}`);
+  const { currentUser } = useSelector((state) => state.user);
 
-  const handleSearch = (value) => setSearchQuery(value);
-  const handleFilter = (value) => setFilterQuery(value);
   const handleReset = () => {
     setSearchQuery('');
     setFilterQuery('all');
@@ -53,7 +51,11 @@ export default function Expenses() {
 
   return (
     <div className="m-4 w-[80%] mx-auto">
-      <ExpenseStats />
+      <h2 className="text-3xl font-semibold my-4">
+        Hey {currentUser.name}, here is your financial snapshot for the month!
+      </h2>
+
+      <ExpenseStats expenses={expenses} />
       <button
         onClick={() => setShowModal(true)}
         className="px-4 py-2 mt-4 font-semibold bg-slate-700 text-white rounded-md"
@@ -61,7 +63,9 @@ export default function Expenses() {
         Add New Expense
       </button>
       {isLoading ? (
-        <Spinner className="mt-2" />
+        <div className="mt-2 w-full flex justify-center">
+          <Spinner />
+        </div>
       ) : (
         <>
           <div className="flex gap-2 mt-2">

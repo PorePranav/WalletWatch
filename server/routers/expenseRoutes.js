@@ -13,6 +13,7 @@ router
   .post(expenseController.createExpense);
 
 router.get('/expenseStats', expenseController.getExpenseStats);
+router.get('/categoryStats', expenseController.getCategoryData);
 
 router
   .route('/:id')
