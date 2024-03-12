@@ -100,37 +100,39 @@ export default function CategoryChart({ expenses }) {
       {isLoading && !transformData ? (
         <SpinnerLight />
       ) : (
-        <ResponsiveContainer width="100%" height={240}>
-          <PieChart>
-            <Pie
-              data={transformedData}
-              nameKey="category"
-              dataKey="value"
-              innerRadius={85}
-              outerRadius={110}
-              cx="40%"
-              cy="50%"
-              paddingAngle={3}
-            >
-              {transformedData.map((entry) => (
-                <Cell
-                  fill={entry.color}
-                  stroke={entry.stroke}
-                  key={entry.category}
-                />
-              ))}
-            </Pie>
-            <Legend
-              verticalAlign="middle"
-              align="right"
-              width="30%"
-              layout="vertical"
-              iconSize={15}
-              iconType="circle"
-            />
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
+        <div className="my-auto h-full">
+          <ResponsiveContainer width="100%" height={240}>
+            <PieChart>
+              <Pie
+                data={transformedData}
+                nameKey="category"
+                dataKey="value"
+                innerRadius={85}
+                outerRadius={110}
+                cx="40%"
+                cy="50%"
+                paddingAngle={3}
+              >
+                {transformedData.map((entry) => (
+                  <Cell
+                    fill={entry.color}
+                    stroke={entry.stroke}
+                    key={entry.category}
+                  />
+                ))}
+              </Pie>
+              <Legend
+                verticalAlign="middle"
+                align="right"
+                width="30%"
+                layout="vertical"
+                iconSize={15}
+                iconType="circle"
+              />
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
       )}
     </div>
   );

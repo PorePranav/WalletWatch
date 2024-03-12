@@ -51,9 +51,10 @@ export default function Expenses() {
 
   return (
     <div className="m-4 w-[80%] mx-auto">
-      <h2 className="text-3xl font-semibold my-4">
-        Hey {currentUser.name}, here is your financial snapshot for the month!
-      </h2>
+      <h2 className="text-3xl font-semibold mt-4">Hey {currentUser.name},</h2>
+      <p className="text-xl text-slate-700 font-semibold mb-4">
+        Here is your financial snapshot for the month!
+      </p>
 
       <ExpenseStats expenses={expenses} />
       <button

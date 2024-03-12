@@ -28,10 +28,10 @@ export default function ExpenseSummary({ expenses }) {
 
   return (
     <div className="w-full bg-slate-600 h-64 rounded-lg p-4 font-bold leading-12 text-white">
-      {isLoading && expenseSummaryData ? (
+      {isLoading ? (
         <SpinnerLight />
       ) : (
-        <div className="grid gap-2">
+        <div className="grid gap-4">
           <div>
             <span className="text-3xl text-white">You spent </span>
             <br />
@@ -53,6 +53,7 @@ export default function ExpenseSummary({ expenses }) {
                   ?.mostExpendedCategory || ' '
               ).replace('-', ' ')}
             </span>
+            <span className="text-3xl"> expenses</span>
           </div>
         </div>
       )}
