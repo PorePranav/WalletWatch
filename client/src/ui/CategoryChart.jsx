@@ -97,10 +97,10 @@ export default function CategoryChart({ expenses }) {
 
   return (
     <div className="w-full bg-slate-600 h-64 rounded-lg">
-      {isLoading && !transformData ? (
+      {isLoading ? (
         <SpinnerLight />
       ) : (
-        <div className="my-auto h-full">
+        <div>
           <ResponsiveContainer width="100%" height={240}>
             <PieChart>
               <Pie

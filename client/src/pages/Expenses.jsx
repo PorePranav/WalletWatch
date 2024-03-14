@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
+
+import Button from '../ui/Button';
 import Spinner from '../ui/Spinner';
 import ExpenseCard from '../ui/ExpenseCard';
 import AddExpenseModal from '../ui/AddExpenseModal';
@@ -51,18 +53,15 @@ export default function Expenses() {
 
   return (
     <div className="m-4 w-[80%] mx-auto">
-      <h2 className="text-3xl font-semibold mt-4">Hey {currentUser.name},</h2>
+      <h2 className="text-3xl font-semibold mt-4">
+        Hey <span className="font-sono">{currentUser.name}</span>,
+      </h2>
       <p className="text-xl text-slate-700 font-semibold mb-4">
-        Here is your financial snapshot for the month!
+        Here are your expenses for the month!
       </p>
 
       <ExpenseStats expenses={expenses} />
-      <button
-        onClick={() => setShowModal(true)}
-        className="px-4 py-2 mt-4 font-semibold bg-slate-700 text-white rounded-md"
-      >
-        Add New Expense
-      </button>
+      <Button setShowModal={setShowModal}>Add New Expense</Button>
       {isLoading ? (
         <div className="mt-2 w-full flex justify-center">
           <Spinner />
