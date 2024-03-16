@@ -10,6 +10,9 @@ const dueSchema = mongoose.Schema({
     type: Number,
     required: [true, 'Due record must have an amount'],
   },
+  note: {
+    type: String,
+  },
   dueTo: {
     type: String,
     required: [true, 'Due record must have a field to whom the amount is due'],
@@ -23,8 +26,9 @@ const dueSchema = mongoose.Schema({
     type: Date,
   },
   currentStatus: {
-    type: Boolean,
-    default: false,
+    type: String,
+    default: 'unpaid',
+    enum: ['paid', 'unpaid'],
   },
   createdAt: {
     type: Date,
