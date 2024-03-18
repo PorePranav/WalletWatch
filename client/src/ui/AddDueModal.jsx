@@ -8,7 +8,11 @@ export default function AddDueModal({ onClose, onUpdate }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
+    const { id, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [e.target.id]: e.target.value }));
+    if (id === 'direction' && value === 'incoming') {
+      setFormData((prevData) => ({ ...prevData, dueTo: 'Me' }));
+    }
   };
 
   const handleClick = async (e) => {
@@ -65,14 +69,38 @@ export default function AddDueModal({ onClose, onUpdate }) {
             />
           </div>
           <div className="grid grid-cols-2 gap-2 justify-between items-center">
-            <label>Due To</label>
-            <input
-              id="dueTo"
-              type="text"
+            <label>Direction</label>
+            <select
               onChange={handleChange}
-              placeholder="Due To"
               className="border border-slate-400 p-2 rounded-md"
-            />
+              id="direction"
+            >
+              <option value="select">Select...</option>
+              <option value="incoming">Incoming</option>
+              <option value="outgoing">Outgoing</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-2 justify-between items-center">
+            <label>Due To</label>
+            {formData.direction !== 'incoming' ? (
+              <input
+                id="dueTo"
+                type="text"
+                value={formData.dueTo || ''}
+                onChange={handleChange}
+                placeholder="Due To"
+                className="border border-slate-400 p-2 rounded-md"
+              />
+            ) : (
+              <input
+                id="dueTo"
+                type="text"
+                value="Me"
+                disabled
+                placeholder="Due To"
+                className="border border-slate-400 p-2 rounded-md"
+              />
+            )}
           </div>
           <div className="grid grid-cols-2 gap-2 justify-between items-center">
             <label>Due On</label>
@@ -92,18 +120,6 @@ export default function AddDueModal({ onClose, onUpdate }) {
               placeholder="Note"
               className="border border-slate-400 p-2 rounded-md"
             />
-          </div>
-          <div className="grid grid-cols-2 gap-2 justify-between items-center">
-            <label>Direction</label>
-            <select
-              onChange={handleChange}
-              className="border border-slate-400 p-2 rounded-md"
-              id="direction"
-            >
-              <option value="select">Select...</option>
-              <option value="incoming">Incoming</option>
-              <option value="outgoing">Outgoing</option>
-            </select>
           </div>
 
           <button

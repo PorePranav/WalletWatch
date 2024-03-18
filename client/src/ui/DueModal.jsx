@@ -12,6 +12,28 @@ export default function DueModal({ due, onClose, onUpdate }) {
     setFormData((prevData) => ({ ...prevData, [e.target.id]: e.target.value }));
   };
 
+  const handlePayment = (e) => {
+    const paymentFunction = axios
+      .patch(
+        `http://localhost:3000/api/v1/dues/${due._id}`,
+        { currentStatus: 'paid' },
+        { withCredentials: true }
+      )
+      .then(() => {
+        onClose();
+        onUpdate();
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+
+    toast.promise(paymentFunction, {
+      loading: 'Updating due details',
+      success: 'Updated due details',
+      error: 'There was an error updating the due',
+    });
+  };
+
   const handleDelete = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -143,6 +165,15 @@ export default function DueModal({ due, onClose, onUpdate }) {
           >
             Edit Due
           </button>
+          {due.currentStatus === 'unpaid' && (
+            <button
+              onClick={(e) => handlePayment(e)}
+              className="bg-green-700 rounded-md font-semibold text-white px-4 py-2"
+            >
+              Mark Paid
+            </button>
+          )}
+
           <button
             onClick={(e) => handleDelete(e)}
             className="bg-red-700 rounded-md font-semibold text-white px-4 py-2"

@@ -8,7 +8,8 @@ const Due = require('./../models/dueModel');
 router.use(authController.protect);
 
 router.route('/').get(duesController.getAllDues).post(duesController.createDue);
-router.get('/dueStats', duesController.getDueStats);
+router.get('/owedToStats', duesController.getOwedToStats);
+router.get('/owedFromStats', duesController.getOwedFromStats);
 router
   .route('/:id')
   .get(handlerFactory.checkOwnership(Due), duesController.getDue)

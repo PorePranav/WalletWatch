@@ -8,12 +8,44 @@ exports.getDue = handlerFactory.getOne(Due);
 exports.updateDue = handlerFactory.update(Due);
 exports.deleteDue = handlerFactory.delete(Due);
 
-exports.getDueStats = catchAsync(async (req, res, next) => {
+exports.getOwedToStats = catchAsync(async (req, res, next) => {
   const stats = await Due.aggregate([
     {
       $match: {
         user: req.user._id,
-        paid: false,
+        currentStatus: 'unpaid',
+        direction: 'outgoing',
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        numDues: { $sum: 1 },
+        totalDues: { $sum: '$amount' },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        numDues: 1,
+        totalDues: 1,
+      },
+    },
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    data: stats,
+  });
+});
+
+exports.getOwedFromStats = catchAsync(async (req, res, next) => {
+  const stats = await Due.aggregate([
+    {
+      $match: {
+        user: req.user._id,
+        currentStatus: 'unpaid',
+        direction: 'incoming',
       },
     },
     {
