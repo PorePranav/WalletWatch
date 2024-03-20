@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { formatCurrency } from '../utils/helpers';
+import { formatCurrency } from '../../utils/helpers';
 import { HiDotsVertical } from 'react-icons/hi';
 import { format } from 'date-fns';
 

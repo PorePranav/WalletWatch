@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-import DuesStats from '../ui/DuesStats';
+import DuesStats from '../components/dues/stats/DuesStats';
 import Spinner from '../ui/Spinner';
-import DueCard from '../ui/DueCard';
+import DueCard from '../components/dues/DueCard';
 import Button from '../ui/Button';
-import AddDueModal from '../ui/AddDueModal';
+import AddDueModal from '../components/dues/AddDueModal';
 
 export default function Dues() {
   const { currentUser } = useSelector((state) => state.user);

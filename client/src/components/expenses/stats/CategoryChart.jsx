@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from 'recharts';
 import axios from 'axios';
-import SpinnerLight from './SpinnerLight';
+import SpinnerLight from '../../../ui/SpinnerLight';
 
 export default function CategoryChart({ expenses }) {
   const [categoryData, setCategoryData] = useState([]);

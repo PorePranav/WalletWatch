@@ -5,9 +5,9 @@ import toast from 'react-hot-toast';
 
 import Button from '../ui/Button';
 import Spinner from '../ui/Spinner';
-import ExpenseCard from '../ui/ExpenseCard';
-import AddExpenseModal from '../ui/AddExpenseModal';
-import ExpenseStats from '../ui/ExpenseStats';
+import ExpenseCard from './../components/expenses/ExpenseCard';
+import AddExpenseModal from './../components/expenses/AddExpenseModal';
+import ExpenseStats from './../components/expenses/stats/ExpenseStats';
 
 export default function Expenses() {
   const [expenses, setExpenses] = useState([]);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import SpinnerLight from './SpinnerLight';
-import { formatCurrency } from '../utils/helpers';
+import SpinnerLight from '../../../ui/SpinnerLight';
+import { formatCurrency } from '../../../utils/helpers';
 
 export default function OwedToStat() {
   const [data, setData] = useState({});

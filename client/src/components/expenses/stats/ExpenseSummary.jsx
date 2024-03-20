@@ -1,6 +1,6 @@
-import { capitalizeFirstLetter, formatCurrency } from '../utils/helpers';
+import { capitalizeFirstLetter, formatCurrency } from '../../../utils/helpers';
 import { useState, useEffect } from 'react';
-import SpinnerLight from './SpinnerLight';
+import SpinnerLight from '../../../ui/SpinnerLight';
 import axios from 'axios';
 
 export default function ExpenseSummary({ expenses }) {
