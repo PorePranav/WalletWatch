@@ -11,7 +11,9 @@ router
   .route('/')
   .get(incomesController.getAllIncomes)
   .post(incomesController.createIncome);
-router.get('/incomeStats', incomesController.getIncomeStats);
+router.get('/balanceStats', incomesController.getIncomeStats);
+router.get('/monthlyIncome', incomesController.getMonthlyIncome);
+
 router
   .route('/:id')
   .get(handlerFactory.checkOwnership(Income), incomesController.getIncome)

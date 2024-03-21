@@ -19,7 +19,7 @@ exports.getExpenseStats = catchAsync(async (req, res, next) => {
         user: req.user._id,
         createdAt: {
           $gte: startDate,
-          $lte: endDate,
+          $lt: endDate,
         },
       },
     },

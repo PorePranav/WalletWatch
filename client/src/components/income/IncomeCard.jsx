@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { formatCurrency } from '../../utils/helpers';
 import { HiDotsVertical } from 'react-icons/hi';
 import { format } from 'date-fns';
+import IncomeModal from './IncomeModal';
 
 export default function IncomeCard({ income, onUpdate }) {
   const date = format(new Date(income.createdAt), 'dd MMM yyyy');
@@ -22,6 +23,13 @@ export default function IncomeCard({ income, onUpdate }) {
           <HiDotsVertical />
         </button>
       </div>
+      {showModal && (
+        <IncomeModal
+          income={income}
+          onClose={() => setShowModal(false)}
+          onUpdate={onUpdate}
+        />
+      )}
     </>
   );
 }

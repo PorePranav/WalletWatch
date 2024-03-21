@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { signIn } from "../redux/user/userSlice";
-import OAuth from "../components/OAuth";
-import axios from "axios";
-import { toast } from "react-hot-toast";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { signIn } from '../redux/user/userSlice';
+import OAuth from '../components/OAuth';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
@@ -20,13 +20,13 @@ export default function SignIn() {
     e.preventDefault();
     setIsLoading(true);
     axios
-      .post("http://localhost:3000/api/v1/users/login", formData, {
+      .post('http://localhost:3000/api/v1/users/login', formData, {
         withCredentials: true,
       })
       .then((data) => {
         dispatch(signIn(data.data.user));
         setIsLoading(false);
-        navigate("/");
+        navigate('/expenses');
       })
       .catch((err) => {
         setIsLoading(false);

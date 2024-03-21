@@ -61,7 +61,6 @@ export default function Expenses() {
       </p>
 
       <ExpenseStats expenses={expenses} />
-      <Button setShowModal={setShowModal}>Add New Expense</Button>
       {isLoading ? (
         <div className="mt-2 w-full flex justify-center">
           <Spinner />
@@ -99,6 +98,7 @@ export default function Expenses() {
               Reset
             </button>
           </div>
+          <Button setShowModal={setShowModal}>Add New Expense</Button>
           {filteredExpenses.length == 0 && (
             <p className="mt-4">You have no expenses listed!</p>
           )}

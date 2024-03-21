@@ -67,7 +67,7 @@ export default function Dues() {
       <p className="text-xl text-slate-700 font-semibold mb-4">
         Here are your dues for the month!
       </p>
-      <DuesStats />
+      <DuesStats dues={dues} />
       <div className="flex gap-2 mt-2">
         <input
           type="text"

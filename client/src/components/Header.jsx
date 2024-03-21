@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { FaSearch } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
 export default function Header() {
@@ -16,11 +15,6 @@ export default function Header() {
         <ul className="flex gap-4 items-center">
           {currentUser && (
             <>
-              <Link to="/">
-                <li className="hidden sm:inline text-slate-700 hover:underline">
-                  Dashboard
-                </li>
-              </Link>
               <Link to="/expenses">
                 <li className="hidden sm:inline text-slate-700 hover:underline">
                   Expenses

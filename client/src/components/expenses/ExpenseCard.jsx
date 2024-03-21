@@ -14,7 +14,9 @@ export default function ExpenseCard({ expense, onUpdate }) {
           {formatCurrency(expense.amount)}
         </p>
         <p>{expense.note}</p>
-        <p>{format(new Date(expense.createdAt), 'dd MMM yyyy')}</p>
+        <p className="font-merriweather font-bold">
+          {format(new Date(expense.createdAt), 'dd MMM yyyy')}
+        </p>
         <span className="uppercase rounded-full text-sm px-0.75 py-0.5 font-semibold text-slate-700 bg-slate-300">
           {expense.category}
         </span>

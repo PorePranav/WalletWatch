@@ -3,7 +3,7 @@ import axios from 'axios';
 import SpinnerLight from '../../../ui/SpinnerLight';
 import { formatCurrency } from '../../../utils/helpers';
 
-export default function OwedToStat() {
+export default function OwedToStat({ dues }) {
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,7 +22,7 @@ export default function OwedToStat() {
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  }, [dues]);
 
   return (
     <div className="w-full bg-slate-600 h-64 rounded-lg p-4 font-bold leading-12 text-white ">
